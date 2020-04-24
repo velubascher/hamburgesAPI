@@ -1,4 +1,9 @@
 {
     "python.linting.pylintEnabled": true,
-    "python.linting.enabled": true
+    "python.linting.enabled": true,
+    "python.pythonPath": "C:\\Users\\vicen\\envs\\hamburguesapi\\Scripts\\python.exe",
+    "python.linting.pylintArgs": [
+        "--disable=C0111", // missing docstring
+        "--load-plugins=pylint_django,pylint_celery",
+     ],
 }
