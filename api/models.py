@@ -8,6 +8,7 @@ class Ingrediente(models.Model):
 
 class Hamburguesa(models.Model):
     nombre = models.TextField()
+    precio = models.IntegerField()
     descripcion = models.TextField()
     imagen = models.URLField()
     ingredientes = models.ManyToManyField(Ingrediente)
