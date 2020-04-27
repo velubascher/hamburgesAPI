@@ -5,10 +5,16 @@ class Ingrediente(models.Model):
     nombre = models.TextField()
     descripcion = models.TextField()
 
+    def __str__(self):
+        return self.nombre
+
 
 class Hamburguesa(models.Model):
     nombre = models.TextField()
     precio = models.IntegerField()
     descripcion = models.TextField()
     imagen = models.URLField()
-    ingredientes = models.ManyToManyField(Ingrediente)
+    ingredientes = models.ManyToManyField(Ingrediente, blank=True)
+
+    def __str__(self):
+        return self.nombre

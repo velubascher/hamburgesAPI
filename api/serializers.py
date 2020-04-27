@@ -10,8 +10,14 @@ class IngredienteSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class HamburguesaSerializer(serializers.HyperlinkedModelSerializer):
-    ingredientes = IngredienteSerializer(many=True, read_only=True)
+    # ingredientes = IngredienteSerializer(many=True, read_only=True)
+
+    def to_representation(self, instance):
+        hamburguesa = super().to_representation(instance)
+        ingredientes = hamburguesa.pop('ingredientes')
+        hamburguesa['ingredientes'] = [dict(path=ing) for ing in ingredientes]
+        return hamburguesa
 
     class Meta:
         model = Hamburguesa
-        fields = ['id', 'nombre', 'descripcion', 'imagen', 'ingredientes']
+        fields = ['id', 'nombre', 'precio', 'descripcion', 'imagen', 'ingredientes']

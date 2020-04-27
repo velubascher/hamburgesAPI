@@ -21,7 +21,7 @@ from api.views import HamburguesaViewSet, IngredienteViewSet
 
 router = DefaultRouter()
 router.register(r'hamburguesa', HamburguesaViewSet)
-router.register(r'ingredientes', IngredienteViewSet)
+router.register(r'ingrediente', IngredienteViewSet)
 
 
 urlpatterns = [
