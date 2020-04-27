@@ -20,7 +20,7 @@ from api.views import HamburguesaViewSet, IngredienteViewSet
 
 
 router = DefaultRouter()
-router.register(r'hamburguesa', HamburguesaViewSet)
+router.register(r'hamburguesa', HamburguesaViewSet, basename='hamburguesa')
 router.register(r'ingrediente', IngredienteViewSet)
 
 
