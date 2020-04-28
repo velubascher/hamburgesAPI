@@ -19,7 +19,13 @@ from rest_framework.routers import DefaultRouter
 from api.views import HamburguesaViewSet, IngredienteViewSet
 
 
-router = DefaultRouter(trailing_slash=False)
+class SlashRouter(DefaultRouter):
+
+    def __init__(self, *args, **kwargs):
+        super(DefaultRouter, self).__init__(*args, **kwargs)
+        self.trailing_slash = '/?'
+    
+router = SlashRouter()
 router.register(r'hamburguesa', HamburguesaViewSet, basename='hamburguesa')
 router.register(r'ingrediente', IngredienteViewSet, basename='ingrediente')
 
