@@ -2,9 +2,10 @@ from django.shortcuts import render
 from .serializers import HamburguesaSerializer, IngredienteSerializer
 from .models import Hamburguesa, Ingrediente
 from rest_framework import viewsets, status
-from rest_framework.exceptions import ValidationError
+from rest_framework.exceptions import ValidationError, NotFound, ParseError
 from rest_framework.response import Response
 from .actions import format_response
+from rest_framework.decorators import action
 
 # Create your views here.
 
@@ -45,7 +46,7 @@ class IngredienteViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_409_CONFLICT)
         
         self.perform_destroy(ingrediente)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response(status=status.HTTP_200_OK)
 
 
 class HamburguesaViewSet(viewsets.ModelViewSet):
@@ -57,11 +58,28 @@ class HamburguesaViewSet(viewsets.ModelViewSet):
             raise ValidationError('id invalido') 
         hamburguesa = self.get_object()
         serializer = self.get_serializer(hamburguesa)
-        return Response(serializer)
+        return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):
         hamburguesa = self.get_object()
         self.perform_destroy(hamburguesa)
+        return Response(status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['delete'], url_path='ingrediente/(?P<ingrediente_pk>[^/.]+)')
+    def ingrediente(self, request, ingrediente_pk, pk=None):
+        try:
+            hamburguesa = self.get_object()
+        except Exception:
+            raise ParseError('id de hamburguesa invalido')
+
+        try:
+            ingrediente = Ingrediente.objects.get(id=ingrediente_pk)
+            if ingrediente not in hamburguesa.ingredientes.all():
+                raise NotFound
+        except Exception:
+            raise NotFound('Ingrediente inexistente o no esta en la hamburguesa')
+        
+        hamburguesa.ingredientes.remove(ingrediente)
         return Response(status=status.HTTP_200_OK)
 
 
