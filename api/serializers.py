@@ -3,7 +3,6 @@ from .models import Hamburguesa, Ingrediente
 
 
 class HamburguesaSerializer(serializers.HyperlinkedModelSerializer):
-    # ingredientes = IngredienteSerializer(many=True, read_only=True)
 
     def to_representation(self, instance):
         hamburguesa = super().to_representation(instance)
@@ -17,9 +16,7 @@ class HamburguesaSerializer(serializers.HyperlinkedModelSerializer):
 
 
 class IngredienteSerializer(serializers.HyperlinkedModelSerializer):
-    hamburguesas = HamburguesaSerializer(many=True, read_only=True)
 
     class Meta:
         model = Ingrediente
-        fields = ['id', 'nombre', 'descripcion', 'hamburguesas']
-        extra_kwargs = {'hamburguesas': {'write_only': True}}
+        fields = ['id', 'nombre', 'descripcion']
