@@ -65,8 +65,9 @@ class HamburguesaViewSet(viewsets.ModelViewSet):
         self.perform_destroy(hamburguesa)
         return Response(status=status.HTTP_200_OK)
 
-    @action(detail=True, methods=['delete'], url_path='ingrediente/(?P<ingrediente_pk>[^/.]+)')
+    @action(detail=True, methods=['delete', 'put'], url_path='ingrediente/(?P<ingrediente_pk>[^/.]+)')
     def ingrediente(self, request, ingrediente_pk, pk=None):
+        metodo = self.request.method.lower()
         try:
             hamburguesa = self.get_object()
         except Exception:
@@ -74,12 +75,16 @@ class HamburguesaViewSet(viewsets.ModelViewSet):
 
         try:
             ingrediente = Ingrediente.objects.get(id=ingrediente_pk)
-            if ingrediente not in hamburguesa.ingredientes.all():
+            if metodo == 'delete' and ingrediente not in hamburguesa.ingredientes.all():
                 raise NotFound
         except Exception:
-            raise NotFound('Ingrediente inexistente o no esta en la hamburguesa')
-        
-        hamburguesa.ingredientes.remove(ingrediente)
+            raise NotFound('Ingrediente inexistente')
+            
+        if self.request.method.lower() == 'delete':
+            hamburguesa.ingredientes.remove(ingrediente)
+        if self.request.method.lower() == 'put':
+            hamburguesa.ingredientes.add(ingrediente)
         return Response(status=status.HTTP_200_OK)
+
 
 
