@@ -2,13 +2,6 @@ from rest_framework import serializers
 from .models import Hamburguesa, Ingrediente
 
 
-class IngredienteSerializer(serializers.HyperlinkedModelSerializer):
-
-    class Meta:
-        model = Ingrediente
-        fields = ['id', 'nombre', 'descripcion']
-
-
 class HamburguesaSerializer(serializers.HyperlinkedModelSerializer):
     # ingredientes = IngredienteSerializer(many=True, read_only=True)
 
@@ -21,3 +14,12 @@ class HamburguesaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Hamburguesa
         fields = ['id', 'nombre', 'precio', 'descripcion', 'imagen', 'ingredientes']
+
+
+class IngredienteSerializer(serializers.HyperlinkedModelSerializer):
+    hamburguesas = HamburguesaSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Ingrediente
+        fields = ['id', 'nombre', 'descripcion', 'hamburguesas']
+        extra_kwargs = {'hamburguesas': {'write_only': True}}
