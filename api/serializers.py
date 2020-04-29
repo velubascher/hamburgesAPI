@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import Hamburguesa, Ingrediente
+from rest_framework.exceptions import ValidationError
 
 
 class HamburguesaSerializer(serializers.HyperlinkedModelSerializer):
@@ -13,7 +14,14 @@ class HamburguesaSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Hamburguesa
         fields = ['id', 'nombre', 'precio', 'descripcion', 'imagen', 'ingredientes']
+        read_only_fields = ['id', 'ingredientes']
 
+    def validate(self, data):
+        if self.partial and hasattr(self, 'initial_data'):
+            unknown_keys = set(self.initial_data.keys()) - set(self.fields.keys())
+            if unknown_keys:
+                raise ValidationError("Got unknown fields: {}".format(unknown_keys))
+        return data
 
 class IngredienteSerializer(serializers.HyperlinkedModelSerializer):
 

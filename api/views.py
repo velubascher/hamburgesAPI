@@ -46,6 +46,10 @@ class HamburguesaViewSet(viewsets.ModelViewSet):
         self.perform_destroy(hamburguesa)
         return Response(status=status.HTTP_200_OK)
 
+    # def partial_update(self, request, pk=None):
+    #     hamburguesa = self.get_object()
+    #     hamburguesa.
+
     @action(detail=True, methods=['delete', 'put'], url_path='ingrediente/(?P<ingrediente_pk>[^/.]+)')
     def ingrediente(self, request, ingrediente_pk, pk=None):
         metodo = self.request.method.lower()
